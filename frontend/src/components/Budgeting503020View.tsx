@@ -27,6 +27,7 @@ interface Budgeting503020ViewProps {
 export default function Budgeting503020View({ onBack }: Budgeting503020ViewProps) {
     const [income, setIncome] = useState(3000);
     const [completed, setCompleted] = useState(false);
+    const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
     const budget = useMemo(() => ({
         needs: income * 0.5,
@@ -39,6 +40,11 @@ export default function Budgeting503020View({ onBack }: Budgeting503020ViewProps
         { name: 'Wants', value: 30, color: '#a855f7' },
         { name: 'Savings', value: 20, color: '#10b981' },
     ];
+
+    const handleQuiz = (opt: string) => {
+        setSelectedOption(opt);
+        if (opt === '₹200') setCompleted(true);
+    };
 
     return (
         <motion.div
@@ -102,10 +108,13 @@ export default function Budgeting503020View({ onBack }: Budgeting503020ViewProps
                                 {['₹500', '₹300', '₹200'].map((opt) => (
                                     <button
                                         key={opt}
-                                        onClick={() => opt === '₹200' && setCompleted(true)}
+                                        onClick={() => handleQuiz(opt)}
                                         className={cn(
                                             "py-4 border border-slate-800 rounded-2xl transition-all font-bold",
-                                            completed && opt === '₹200' ? "bg-emerald-500 border-emerald-400 text-white" : "hover:border-indigo-500/50 hover:bg-slate-900 text-slate-400 hover:text-white"
+                                            selectedOption === opt 
+                                                ? (opt === '₹200' ? "bg-emerald-500 border-emerald-400 text-white" : "bg-rose-500 border-rose-400 text-white")
+                                                : "hover:border-indigo-500/50 hover:bg-slate-900 text-slate-400 hover:text-white",
+                                            completed && opt === '₹200' && "bg-emerald-500 border-emerald-400 text-white"
                                         )}
                                     >
                                         {opt}
