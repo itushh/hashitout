@@ -29,15 +29,16 @@ import { cn } from '../utils/cn';
 
 interface InflationViewProps {
     onBack: () => void;
+    onComplete: (xp: number, id: string) => void;
 }
 
-export default function InflationView({ onBack }: InflationViewProps) {
+export default function InflationView({ onBack, onComplete }: InflationViewProps) {
     const [inflationRate, setInflationRate] = useState(6);
     const [years, setYears] = useState(10);
     const [completed, setCompleted] = useState(false);
 
     const initialValue = 100000;
-    
+
     const calculation = useMemo(() => {
         const futureValue = initialValue / Math.pow(1 + (inflationRate / 100), years);
         return {
@@ -69,7 +70,10 @@ export default function InflationView({ onBack }: InflationViewProps) {
 
     const handleQuiz = (opt: any, index: number) => {
         setSelectedIndex(index);
-        if (opt.correct) setCompleted(true);
+        if (opt.correct && !completed) {
+            setCompleted(true);
+            onComplete(350, 'inflation');
+        }
     };
 
     return (
@@ -98,7 +102,7 @@ export default function InflationView({ onBack }: InflationViewProps) {
                                 The Ghost in Your Wallet
                             </h2>
                             <p className="text-slate-400 text-lg leading-relaxed mb-8">
-                                Inflation is the rate at which the general level of prices for goods and services is rising. 
+                                Inflation is the rate at which the general level of prices for goods and services is rising.
                                 It's a "Silent Thief" because it doesn't take your money away—it just makes it worth less over time.
                             </p>
 
@@ -153,7 +157,7 @@ export default function InflationView({ onBack }: InflationViewProps) {
                                         onClick={() => handleQuiz(opt, i)}
                                         className={cn(
                                             "w-full text-left p-5 border border-slate-800 rounded-2xl transition-all font-bold flex items-center justify-between group",
-                                            selectedIndex === i 
+                                            selectedIndex === i
                                                 ? (opt.correct ? "bg-emerald-500 border-emerald-400 text-white" : "bg-rose-500 border-rose-400 text-white")
                                                 : "hover:border-orange-500/50 hover:bg-slate-900 text-slate-400 hover:text-white",
                                             completed && opt.correct && "bg-emerald-500 border-emerald-400 text-white"
@@ -178,7 +182,7 @@ export default function InflationView({ onBack }: InflationViewProps) {
 
                             <div className="mb-10 text-center">
                                 <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Purchasing Power of ₹1 Lakh</p>
-                                <motion.div 
+                                <motion.div
                                     key={calculation.futureValue}
                                     initial={{ scale: 0.9, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
@@ -187,7 +191,7 @@ export default function InflationView({ onBack }: InflationViewProps) {
                                     ₹{calculation.futureValue.toLocaleString()}
                                 </motion.div>
                                 <p className="text-rose-500 font-bold text-sm mt-2">
-                                   Lost to Thief: -₹{calculation.loss.toLocaleString()}
+                                    Lost to Thief: -₹{calculation.loss.toLocaleString()}
                                 </p>
                             </div>
 
@@ -196,19 +200,19 @@ export default function InflationView({ onBack }: InflationViewProps) {
                                     <AreaChart data={chartData}>
                                         <defs>
                                             <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#f97316" stopOpacity={0.3}/>
-                                                <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
+                                                <stop offset="5%" stopColor="#f97316" stopOpacity={0.3} />
+                                                <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
                                             </linearGradient>
                                         </defs>
-                                        <Area 
-                                            type="monotone" 
-                                            dataKey="value" 
-                                            stroke="#f97316" 
+                                        <Area
+                                            type="monotone"
+                                            dataKey="value"
+                                            stroke="#f97316"
                                             strokeWidth={3}
-                                            fillOpacity={1} 
-                                            fill="url(#colorValue)" 
+                                            fillOpacity={1}
+                                            fill="url(#colorValue)"
                                         />
-                                        <RechartsTooltip 
+                                        <RechartsTooltip
                                             contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '12px', color: '#fff' }}
                                             itemStyle={{ color: '#f97316', fontWeight: 'bold' }}
                                         />

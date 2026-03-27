@@ -10,7 +10,8 @@ import {
   Zap,
   Star,
   BarChart3,
-  Dices
+  Dices,
+  LogOut
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DashboardView from './components/DashboardView';
@@ -46,10 +47,56 @@ import DebtMarketsMasteryView from './components/DebtMarketsMasteryView';
 import SipMutualFundsView from './components/SipMutualFundsView';
 import StockMarketEssentialsView from './components/StockMarketEssentialsView';
 import NavItem from './components/NavItem';
+import AuthPage from './components/AuthPage';
+import FirstSalarySimulation from './components/FirstSalarySimulation';
+import { api } from './utils/api';
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  xp: number;
+  completedModules: string[];
+}
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [currentModule, setCurrentModule] = useState<string | null>(null);
+  const [activeSimulation, setActiveSimulation] = useState<string | number | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [hasSkippedAuth, setHasSkippedAuth] = useState(false);
+
+  const handleAuthSuccess = (userData: User) => {
+    setUser(userData);
+  };
+
+  const handleSkipAuth = () => {
+    setHasSkippedAuth(true);
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setHasSkippedAuth(false);
+  };
+
+  const handleUpdateProgress = async (xpToAdd: number, moduleId?: string) => {
+    if (!user) return;
+
+    try {
+      const result = await api.post('/user/progress', {
+        userId: user.id,
+        xpToAdd,
+        moduleId
+      });
+      setUser(result.user);
+    } catch (err) {
+      console.error('Failed to update progress:', err);
+    }
+  };
+
+  if (!user && !hasSkippedAuth) {
+    return <AuthPage onAuthSuccess={handleAuthSuccess} onSkip={handleSkipAuth} />;
+  }
 
   const navigateToModule = (moduleId: string) => {
     setCurrentModule(moduleId);
@@ -75,44 +122,53 @@ export default function App() {
         <nav className="flex-1 space-y-3">
           <NavItem
             active={activeTab === 'dashboard'}
-            onClick={() => { setActiveTab('dashboard'); setCurrentModule(null); }}
+            onClick={() => { setActiveTab('dashboard'); setCurrentModule(null); setActiveSimulation(null); }}
             icon={LayoutDashboard}
             label="Dashboard"
           />
           <NavItem
             active={activeTab === 'learning' || activeTab === 'module-detail'}
-            onClick={() => { setActiveTab('learning'); setCurrentModule(null); }}
+            onClick={() => { setActiveTab('learning'); setCurrentModule(null); setActiveSimulation(null); }}
             icon={BookOpen}
             label="Learn Path"
           />
           <NavItem
             active={activeTab === 'simulations'}
-            onClick={() => { setActiveTab('simulations'); setCurrentModule(null); }}
+            onClick={() => { setActiveTab('simulations'); setCurrentModule(null); setActiveSimulation(null); }}
             icon={Gamepad2}
             label="Simulation"
             badge="AI"
           />
           <NavItem
             active={activeTab === 'analytics'}
-            onClick={() => { setActiveTab('analytics'); setCurrentModule(null); }}
+            onClick={() => { setActiveTab('analytics'); setCurrentModule(null); setActiveSimulation(null); }}
             icon={BarChart3}
             label="Analytics"
           />
           <NavItem
             active={activeTab === 'quests'}
-            onClick={() => { setActiveTab('quests'); setCurrentModule(null); }}
+            onClick={() => { setActiveTab('quests'); setCurrentModule(null); setActiveSimulation(null); }}
             icon={Trophy}
             label="Weekly Quests"
           />
         </nav>
 
-        <div className="pt-6 border-t border-slate-800/50">
+        <div className="pt-6 border-t border-slate-800/50 space-y-3">
           <NavItem
             active={activeTab === 'settings'}
-            onClick={() => { setActiveTab('settings'); setCurrentModule(null); }}
+            onClick={() => { setActiveTab('settings'); setCurrentModule(null); setActiveSimulation(null); }}
             icon={Settings}
             label="Profile Settings"
           />
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center space-x-3.5 px-6 py-4 rounded-2xl text-red-500 hover:bg-red-500/10 transition-all font-bold text-sm"
+            >
+              <LogOut className="w-5 h-5" />
+              <span>Log out</span>
+            </button>
+          )}
         </div>
       </aside>
 
@@ -142,12 +198,12 @@ export default function App() {
 
             <div className="flex items-center space-x-4 pl-8 border-l border-slate-800/60">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-bold text-white leading-none mb-1">Alex J.</p>
-                <p className="text-[11px] font-black uppercase tracking-widest text-indigo-400">Level 14</p>
+                <p className="text-sm font-bold text-white leading-none mb-1">{user ? user.name : 'Guest User'}</p>
+                <p className="text-[11px] font-black uppercase tracking-widest text-indigo-400">{user ? 'Verified Explorer' : 'Quick Visit'}</p>
               </div>
               <div className="relative">
                 <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-indigo-500 to-purple-600 border-2 border-slate-800 shadow-lg overflow-hidden flex items-center justify-center">
-                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex&backgroundColor=6366f1" alt="Avatar" />
+                  <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user ? user.name : 'Guest'}&backgroundColor=6366f1`} alt="Avatar" />
                 </div>
                 <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-lg border-2 border-[#0A0D14] flex items-center justify-center">
                   <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
@@ -160,12 +216,21 @@ export default function App() {
         {/* Dynamic Page Rendering */}
         <div className="p-12 max-w-400 mx-auto w-full">
           <AnimatePresence mode="wait">
-            {activeTab === 'dashboard' && <DashboardView key="dashboard" />}
-            {activeTab === 'learning' && <LearningView key="learning" onModuleSelect={navigateToModule} />}
-            {activeTab === 'simulations' && <SimulationView key="simulations" />}
-            {activeTab === 'module-detail' && currentModule === 'budgeting-50-30-20' && <Budgeting503020View key="budgeting-module" onBack={goBack} />}
-            {activeTab === 'module-detail' && currentModule === 'inflation' && <InflationView key="inflation-module" onBack={goBack} />}
-            {activeTab === 'module-detail' && currentModule === 'behavioural-finance' && <BehaviouralFinanceView key="behavioural-module" onBack={goBack} />}
+            {activeTab === 'dashboard' && <DashboardView key="dashboard" user={user} onStartQuest={() => handleUpdateProgress(100)} />}
+            {activeTab === 'learning' && <LearningView key="learning" onModuleSelect={navigateToModule} user={user} />}
+            {activeTab === 'simulations' && !activeSimulation && (
+              <SimulationView key="simulations" onLaunchSimulation={setActiveSimulation} />
+            )}
+            {activeTab === 'simulations' && activeSimulation === 1 && (
+              <FirstSalarySimulation
+                key="first-salary-sim"
+                onBack={() => setActiveSimulation(null)}
+                onComplete={(xp, id) => handleUpdateProgress(xp, id)}
+              />
+            )}
+            {activeTab === 'module-detail' && currentModule === 'budgeting-50-30-20' && <Budgeting503020View key="budgeting-module" onBack={goBack} onComplete={handleUpdateProgress} />}
+            {activeTab === 'module-detail' && currentModule === 'inflation' && <InflationView key="inflation-module" onBack={goBack} onComplete={handleUpdateProgress} />}
+            {activeTab === 'module-detail' && currentModule === 'behavioural-finance' && <BehaviouralFinanceView key="behavioural-module" onBack={goBack} onComplete={handleUpdateProgress} />}
             {activeTab === 'module-detail' && currentModule === 'account-types' && <AccountTypesView key="account-types-module" onBack={goBack} />}
             {activeTab === 'module-detail' && currentModule === 'bank-business' && <HowBanksMakeMoneyView key="bank-business-module" onBack={goBack} />}
             {activeTab === 'module-detail' && currentModule === 'interest-rates' && <MagicOfInterestView key="interest-rates-module" onBack={goBack} />}

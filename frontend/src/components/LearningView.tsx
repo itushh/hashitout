@@ -7,10 +7,16 @@ import { cn } from '../utils/cn';
 import { CURRICULUM } from '../data/mockData';
 
 interface LearningViewProps {
+    user: {
+        id: string;
+        name: string;
+        xp: number;
+        completedModules: string[];
+    } | null;
     onModuleSelect: (id: string) => void;
 }
 
-export default function LearningView({ onModuleSelect }: LearningViewProps) {
+export default function LearningView({ onModuleSelect, user }: LearningViewProps) {
     return (
         <motion.div
             initial={{ opacity: 0, x: 20 }}
@@ -81,7 +87,7 @@ export default function LearningView({ onModuleSelect }: LearningViewProps) {
                                                         <div className="w-12 h-12 rounded-xl flex items-center justify-center transition-colors bg-indigo-500/20 text-indigo-400">
                                                             <SubIcon className="w-6 h-6" />
                                                         </div>
-                                                        {sub.status === 'completed' && (
+                                                        {user?.completedModules.includes(sub.id) && (
                                                             <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/40">
                                                                 <CheckCircle2 className="w-4 h-4 text-white" />
                                                             </div>

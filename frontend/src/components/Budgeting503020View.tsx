@@ -22,9 +22,10 @@ import { cn } from '../utils/cn';
 
 interface Budgeting503020ViewProps {
     onBack: () => void;
+    onComplete: (xp: number, id: string) => void;
 }
 
-export default function Budgeting503020View({ onBack }: Budgeting503020ViewProps) {
+export default function Budgeting503020View({ onBack, onComplete }: Budgeting503020ViewProps) {
     const [income, setIncome] = useState(3000);
     const [completed, setCompleted] = useState(false);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -43,7 +44,10 @@ export default function Budgeting503020View({ onBack }: Budgeting503020ViewProps
 
     const handleQuiz = (opt: string) => {
         setSelectedOption(opt);
-        if (opt === '₹200') setCompleted(true);
+        if (opt === '₹200' && !completed) {
+            setCompleted(true);
+            onComplete(250, 'budgeting-50-30-20');
+        }
     };
 
     return (
@@ -111,7 +115,7 @@ export default function Budgeting503020View({ onBack }: Budgeting503020ViewProps
                                         onClick={() => handleQuiz(opt)}
                                         className={cn(
                                             "py-4 border border-slate-800 rounded-2xl transition-all font-bold",
-                                            selectedOption === opt 
+                                            selectedOption === opt
                                                 ? (opt === '₹200' ? "bg-emerald-500 border-emerald-400 text-white" : "bg-rose-500 border-rose-400 text-white")
                                                 : "hover:border-indigo-500/50 hover:bg-slate-900 text-slate-400 hover:text-white",
                                             completed && opt === '₹200' && "bg-emerald-500 border-emerald-400 text-white"

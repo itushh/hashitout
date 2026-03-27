@@ -9,7 +9,11 @@ import { motion } from 'framer-motion';
 import { cn } from '../utils/cn';
 import { SIMULATIONS } from '../data/mockData';
 
-export default function SimulationView() {
+interface SimulationViewProps {
+    onLaunchSimulation: (id: string | number) => void;
+}
+
+export default function SimulationView({ onLaunchSimulation }: SimulationViewProps) {
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -68,7 +72,10 @@ export default function SimulationView() {
                                     <span className="font-black text-white text-xl">+{sim.xp} <span className="text-slate-600 font-bold text-sm tracking-normal uppercase">XP</span></span>
                                 </div>
                                 {sim.status === 'available' ? (
-                                    <button className="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black rounded-2xl shadow-xl shadow-indigo-900/30 transition-all active:scale-95 group-hover:scale-105">
+                                    <button
+                                        onClick={() => onLaunchSimulation(sim.id)}
+                                        className="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black rounded-2xl shadow-xl shadow-indigo-900/30 transition-all active:scale-95 group-hover:scale-105"
+                                    >
                                         Launch Scenario
                                     </button>
                                 ) : (

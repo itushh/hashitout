@@ -16,7 +16,21 @@ import { motion } from 'framer-motion';
 import { cn } from '../utils/cn';
 import { SAVINGS_DATA, MODULES } from '../data/mockData';
 
-export default function DashboardView() {
+interface DashboardViewProps {
+    user: {
+        id: string;
+        name: string;
+        xp: number;
+        completedModules: string[];
+    } | null;
+    onStartQuest?: () => void;
+}
+
+export default function DashboardView({ user, onStartQuest }: DashboardViewProps) {
+    const firstName = user ? user.name.split(' ')[0] : 'Explorer';
+    const nextRewardLevel = Math.floor((user?.xp || 0) / 1000) + 15;
+    const progressPercent = Math.min(((user?.xp || 0) % 1000) / 10, 100);
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -33,15 +47,18 @@ export default function DashboardView() {
                             Personal Goal: New Laptop
                         </div>
                         <h1 className="text-5xl font-black text-white mb-6 leading-[1.15] tracking-tight">
-                            Keep it up, Alex! <br />
-                            <span className="text-white/70">Next reward: Lv. 15</span>
+                            Keep it up, {firstName}! <br />
+                            <span className="text-white/70">Next reward: Lv. {nextRewardLevel}</span>
                         </h1>
                         <p className="text-indigo-100 text-lg mb-10 leading-relaxed font-medium">
-                            You've reached <span className="text-white font-bold">34% of your monthly goal</span>.
+                            You've reached <span className="text-white font-bold">{progressPercent.toFixed(0)}% of your monthly goal</span>.
                             Our AI analysis suggests you can save $40 more if you skip one 'Dining Out' this week.
                         </p>
                         <div className="flex flex-wrap gap-4">
-                            <button className="bg-white text-indigo-700 font-black px-8 py-4 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-black/20 flex items-center space-x-2">
+                            <button
+                                onClick={onStartQuest}
+                                className="bg-white text-indigo-700 font-black px-8 py-4 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-black/20 flex items-center space-x-2"
+                            >
                                 <Zap className="w-5 h-5 fill-current" />
                                 <span>Start Daily Quest</span>
                             </button>
@@ -140,14 +157,16 @@ export default function DashboardView() {
                                         <module.icon className="w-7 h-7 text-white" />
                                     </div>
                                     <div className="text-right">
-                                        <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em]">{module.progress}% Mastered</span>
+                                        <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em]">
+                                            {user?.completedModules.includes(String(module.id)) ? '100% Mastered' : `${module.progress}% Mastered`}
+                                        </span>
                                     </div>
                                 </div>
                                 <h3 className="font-extrabold text-xl text-white mb-6 group-hover:text-indigo-400 transition-colors">{module.title}</h3>
                                 <div className="w-full bg-slate-800/50 h-3 rounded-full overflow-hidden mb-2 shadow-inner">
                                     <motion.div
                                         initial={{ width: 0 }}
-                                        animate={{ width: `${module.progress}%` }}
+                                        animate={{ width: user?.completedModules.includes(String(module.id)) ? '100%' : `${module.progress}%` }}
                                         transition={{ duration: 1.5, ease: "easeOut" }}
                                         className={cn("h-full relative overflow-hidden", module.color)}
                                     >

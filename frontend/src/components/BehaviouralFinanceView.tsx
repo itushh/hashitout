@@ -24,32 +24,33 @@ import { cn } from '../utils/cn';
 
 interface BehaviouralFinanceViewProps {
     onBack: () => void;
+    onComplete: (xp: number, id: string) => void;
 }
 
-export default function BehaviouralFinanceView({ onBack }: BehaviouralFinanceViewProps) {
+export default function BehaviouralFinanceView({ onBack, onComplete }: BehaviouralFinanceViewProps) {
     const [emotionalXp, setEmotionalXp] = useState(0);
     const [completed, setCompleted] = useState(false);
     const [selectedScenario, setSelectedScenario] = useState<number | null>(null);
 
     const biases = [
-        { 
-            id: 'loss-aversion', 
-            name: "Loss Aversion", 
-            icon: <TrendingDown className="w-5 h-5 text-rose-400" />, 
+        {
+            id: 'loss-aversion',
+            name: "Loss Aversion",
+            icon: <TrendingDown className="w-5 h-5 text-rose-400" />,
             desc: "The pain of losing is twice as powerful as the joy of gaining.",
             color: "border-rose-500/20 bg-rose-500/5"
         },
-        { 
-            id: 'herd-mentality', 
-            name: "Herd Mentality", 
-            icon: <Users className="w-5 h-5 text-indigo-400" />, 
+        {
+            id: 'herd-mentality',
+            name: "Herd Mentality",
+            icon: <Users className="w-5 h-5 text-indigo-400" />,
             desc: "Following the crowd without looking at the facts.",
             color: "border-indigo-500/20 bg-indigo-500/5"
         },
-        { 
-            id: 'anchoring', 
-            name: "Anchoring Bias", 
-            icon: <Anchor className="w-5 h-5 text-amber-400" />, 
+        {
+            id: 'anchoring',
+            name: "Anchoring Bias",
+            icon: <Anchor className="w-5 h-5 text-amber-400" />,
             desc: "Focusing too much on the first piece of information you see.",
             color: "border-amber-500/20 bg-amber-500/5"
         }
@@ -75,8 +76,12 @@ export default function BehaviouralFinanceView({ onBack }: BehaviouralFinanceVie
 
     const handleScenario = (scenarioIdx: number, optionIdx: number) => {
         if (optionIdx === scenarios[scenarioIdx].correct) {
-            setEmotionalXp(prev => Math.min(prev + 50, 100));
-            if (emotionalXp >= 50) setCompleted(true);
+            const nextXp = Math.min(emotionalXp + 50, 100);
+            setEmotionalXp(nextXp);
+            if (nextXp >= 100 && !completed) {
+                setCompleted(true);
+                onComplete(500, 'behavioural-finance');
+            }
         }
         setSelectedScenario(optionIdx);
     };
@@ -106,7 +111,7 @@ export default function BehaviouralFinanceView({ onBack }: BehaviouralFinanceVie
                             The Logic Gap
                         </h2>
                         <p className="text-slate-400 text-lg leading-relaxed mb-8">
-                            Finance isn't just about math; it's about humans. Our brains are hardwired for survival in the wild, not for picking stocks or budgeting. 
+                            Finance isn't just about math; it's about humans. Our brains are hardwired for survival in the wild, not for picking stocks or budgeting.
                             Understanding your "Mind Traps" is the first step to financial freedom.
                         </p>
 
@@ -166,9 +171,9 @@ export default function BehaviouralFinanceView({ onBack }: BehaviouralFinanceVie
                                     {/* Simple Gauge visualization */}
                                     <svg className="w-full h-full" viewBox="0 0 100 100">
                                         <circle cx="50" cy="50" r="45" fill="none" stroke="#1e293b" strokeWidth="10" />
-                                        <motion.circle 
-                                            cx="50" cy="50" r="45" fill="none" stroke="#a855f7" strokeWidth="10" 
-                                            strokeDasharray="282.7" 
+                                        <motion.circle
+                                            cx="50" cy="50" r="45" fill="none" stroke="#a855f7" strokeWidth="10"
+                                            strokeDasharray="282.7"
                                             strokeDashoffset={282.7 - (282.7 * emotionalXp / 100)}
                                             strokeLinecap="round"
                                             initial={{ strokeDashoffset: 282.7 }}
@@ -236,7 +241,7 @@ export default function BehaviouralFinanceView({ onBack }: BehaviouralFinanceVie
                                 </div>
                             )}
                         </div>
-                        
+
                         {/* Purple background glow */}
                         <div className="absolute -top-10 -right-10 w-48 h-48 bg-purple-500/5 blur-[80px] pointer-events-none"></div>
                     </div>
