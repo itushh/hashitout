@@ -1,4 +1,5 @@
-import { useState, useMemo, ReactNode } from 'react';
+import { useState, useMemo } from 'react';
+import type { ReactNode, ElementType } from 'react';
 import {
   LayoutDashboard,
   BookOpen,
@@ -27,6 +28,7 @@ import {
   CheckCircle,
   Sparkles
 } from 'lucide-react';
+
 import {
   AreaChart,
   Area,
@@ -88,7 +90,7 @@ export default function App() {
       {/* Sidebar */}
       <aside className="w-68 border-r border-slate-800/80 flex flex-col p-8 space-y-10 bg-[#0D1117]">
         <div className="flex items-center space-x-3.5 px-2">
-          <div className="w-11 h-11 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-600/20">
+          <div className="w-11 h-11 bg-linear-to-tr from-indigo-600 to-violet-500 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-600/20">
             <Zap className="text-white w-6 h-6 fill-current" />
           </div>
           <span className="text-2xl font-black tracking-tight text-white">FinYoda</span>
@@ -168,7 +170,7 @@ export default function App() {
                 <p className="text-[11px] font-black uppercase tracking-widest text-indigo-400">Level 14</p>
               </div>
               <div className="relative">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 border-2 border-slate-800 shadow-lg overflow-hidden flex items-center justify-center">
+                <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-indigo-500 to-purple-600 border-2 border-slate-800 shadow-lg overflow-hidden flex items-center justify-center">
                   <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex&backgroundColor=6366f1" alt="Avatar" />
                 </div>
                 <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-lg border-2 border-[#0A0D14] flex items-center justify-center">
@@ -180,7 +182,7 @@ export default function App() {
         </header>
 
         {/* Dynamic Page Rendering */}
-        <div className="p-12 max-w-[1600px] mx-auto w-full">
+        <div className="p-12 max-w-400 mx-auto w-full">
           <AnimatePresence mode="wait">
             {activeTab === 'dashboard' && <DashboardView key="dashboard" />}
             {activeTab === 'learning' && <LearningView key="learning" onModuleSelect={navigateToModule} />}
@@ -193,7 +195,7 @@ export default function App() {
                 exit={{ opacity: 0, y: -20 }}
                 className="flex flex-col items-center justify-center py-32 text-center"
               >
-                <div className="w-28 h-28 bg-slate-900 border border-slate-800 rounded-[2rem] flex items-center justify-center mb-8 rotate-3 shadow-2xl">
+                <div className="w-28 h-28 bg-slate-900 border border-slate-800 rounded-4xl flex items-center justify-center mb-8 rotate-3 shadow-2xl">
                   <Dices className="w-14 h-14 text-indigo-500 opacity-80" />
                 </div>
                 <h1 className="text-4xl font-black text-white mb-4 tracking-tight uppercase">Coming Soon</h1>
@@ -209,7 +211,7 @@ export default function App() {
 
 interface NavItemProps {
   active: boolean;
-  icon: any;
+  icon: ElementType;
   label: string;
   onClick: () => void;
   badge?: string;
@@ -254,7 +256,7 @@ function DashboardView() {
     >
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Welcome Section */}
-        <div className="flex-[1.8] relative bg-gradient-to-br from-indigo-700 via-indigo-600 to-violet-700 rounded-[3rem] p-12 overflow-hidden shadow-[0_20px_50px_rgba(79,70,229,0.3)] group">
+        <div className="flex-[1.8] relative bg-linear-to-br from-indigo-700 via-indigo-600 to-violet-700 rounded-[3rem] p-12 overflow-hidden shadow-[0_20px_50px_rgba(79,70,229,0.3)] group">
           <div className="relative z-10 max-w-lg">
             <div className="inline-flex items-center px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-indigo-100 text-[10px] font-black uppercase tracking-[0.2em] mb-6 border border-white/10">
               Personal Goal: New Laptop
@@ -279,7 +281,7 @@ function DashboardView() {
           </div>
 
           {/* Animated Orbs */}
-          <div className="absolute top-[-20%] right-[-10%] w-[400px] h-[400px] bg-white/10 rounded-full blur-[100px] group-hover:bg-white/15 transition-all duration-1000"></div>
+          <div className="absolute top-[-20%] right-[-10%] w-100 h-100 bg-white/10 rounded-full blur-[100px] group-hover:bg-white/15 transition-all duration-1000"></div>
           <div className="absolute bottom-[-10%] left-[40%] w-60 h-60 bg-indigo-400/20 rounded-full blur-[80px]"></div>
 
           <motion.div
@@ -399,7 +401,7 @@ function DashboardView() {
             <h2 className="text-2xl font-black text-white tracking-tight">Smart Suggest</h2>
           </div>
 
-          <div className="bg-gradient-to-b from-[#161B29] to-[#0A0D14] border border-indigo-500/20 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
+          <div className="bg-linear-to-b from-[#161B29] to-[#0A0D14] border border-indigo-500/20 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
             <div className="relative z-10">
               <div className="inline-flex items-center px-3 py-1 bg-indigo-500/10 text-indigo-400 rounded-full text-[9px] font-black uppercase tracking-widest mb-6 border border-indigo-500/20">
                 <Star className="w-3 h-3 mr-2 fill-current" /> Level Up Fast
@@ -428,8 +430,8 @@ function DashboardView() {
             </div>
 
             {/* Background glow */}
-            <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-indigo-500/10 blur-[60px] pointer-events-none"></div>
-            <div className="absolute bottom-[-100px] left-[-20px] w-64 h-64 bg-purple-500/5 blur-[80px] pointer-events-none"></div>
+            <div className="absolute -top-12.5 -right-12.5 w-48 h-48 bg-indigo-500/10 blur-[60px] pointer-events-none"></div>
+            <div className="absolute -bottom-25 -left-5 w-64 h-64 bg-purple-500/5 blur-[80px] pointer-events-none"></div>
           </div>
         </div>
       </div>
@@ -459,7 +461,7 @@ function LearningView({ onModuleSelect }: { onModuleSelect: (id: string) => void
 
       <div className="relative py-10">
         {/* Vertical Path Line */}
-        <div className="absolute top-0 left-16 h-full w-2 bg-gradient-to-b from-indigo-500 via-indigo-600/20 to-transparent rounded-full shadow-[0_0_15px_rgba(79,70,229,0.2)]"></div>
+        <div className="absolute top-0 left-16 h-full w-2 bg-linear-to-b from-indigo-500 via-indigo-600/20 to-transparent rounded-full shadow-[0_0_15px_rgba(79,70,229,0.2)]"></div>
 
         <div className="space-y-24">
           {[1, 2, 3].map((level) => (
@@ -507,7 +509,7 @@ function LearningView({ onModuleSelect }: { onModuleSelect: (id: string) => void
                       onClick={() => sub.status === 'active' && onModuleSelect(sub.id)}
                       key={i}
                       className={cn(
-                        "relative group/card p-6 rounded-[2rem] border transition-all duration-300",
+                        "relative group/card p-6 rounded-4xl border transition-all duration-300",
                         sub.status === 'completed' ? "bg-slate-900/30 border-slate-800 opacity-60" :
                           sub.status === 'active' ? "bg-indigo-600/5 border-indigo-500/30 ring-1 ring-indigo-500/20 cursor-pointer hover:bg-indigo-600/10 hover:border-indigo-500/50" :
                             "bg-slate-900/5 border-slate-800 opacity-30 cursor-not-allowed"
@@ -621,7 +623,7 @@ function SimulationView() {
             </div>
 
             {/* Background Art */}
-            <div className="absolute bottom-[-40px] right-[-40px] opacity-[0.03] group-hover:opacity-[0.07] transition-opacity pointer-events-none">
+            <div className="absolute -bottom-10 -right-10 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity pointer-events-none">
               <Dices className="w-64 h-64 text-white" />
             </div>
           </motion.div>
@@ -724,7 +726,7 @@ function Budgeting503020View({ onBack }: { onBack: () => void }) {
         </div>
 
         <div className="lg:col-span-2 space-y-8">
-          <div className="bg-gradient-to-br from-[#161B29] to-[#0A0D14] border border-indigo-500/20 rounded-[3rem] p-10 shadow-2xl relative overflow-hidden sticky top-32">
+          <div className="bg-linear-to-br from-[#161B29] to-[#0A0D14] border border-indigo-500/20 rounded-[3rem] p-10 shadow-2xl relative overflow-hidden top-32">
             <div className="relative z-10">
               <h3 className="text-xl font-black text-white mb-8 flex items-center">
                 <PieChartIcon className="w-5 h-5 mr-3 text-indigo-400" />
@@ -810,7 +812,7 @@ function Budgeting503020View({ onBack }: { onBack: () => void }) {
             </div>
 
             {/* Background glow */}
-            <div className="absolute top-[-100px] left-[-100px] w-64 h-64 bg-indigo-500/5 blur-[100px] pointer-events-none"></div>
+            <div className="absolute -top-25 -left-25 w-64 h-64 bg-indigo-500/5 blur-[100px] pointer-events-none"></div>
           </div>
         </div>
       </div>
@@ -828,7 +830,7 @@ interface BudgetCardProps {
 
 function BudgetCard({ title, desc, amount, color, icon }: BudgetCardProps) {
   return (
-    <div className={cn("flex items-center justify-between p-6 rounded-[2rem] border transition-all hover:scale-[1.01]", color)}>
+    <div className={cn("flex items-center justify-between p-6 rounded-4xl border transition-all hover:scale-[1.01]", color)}>
       <div className="flex items-center space-x-5">
         <div className="w-12 h-12 rounded-2xl bg-black/20 flex items-center justify-center shadow-inner">
           {icon}
