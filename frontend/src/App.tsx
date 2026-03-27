@@ -17,6 +17,34 @@ import DashboardView from './components/DashboardView';
 import LearningView from './components/LearningView';
 import SimulationView from './components/SimulationView';
 import Budgeting503020View from './components/Budgeting503020View';
+import InflationView from './components/InflationView';
+import BehaviouralFinanceView from './components/BehaviouralFinanceView';
+import AccountTypesView from './components/AccountTypesView';
+import HowBanksMakeMoneyView from './components/HowBanksMakeMoneyView';
+import MagicOfInterestView from './components/MagicOfInterestView';
+import ReadingStatementView from './components/ReadingStatementView';
+import TaxTypesView from './components/TaxTypesView';
+import IncomeTaxBasicsView from './components/IncomeTaxBasicsView';
+import CapitalGainsView from './components/CapitalGainsView';
+import TermVsOthersView from './components/TermVsOthersView';
+import HealthInsuranceView from './components/HealthInsuranceView';
+import VehicleProtectionView from './components/VehicleProtectionView';
+import AvoidAgentScamsView from './components/AvoidAgentScamsView';
+import FdRetirementView from './components/FdRetirementView';
+import PfNpsDeepDiveView from './components/PfNpsDeepDiveView';
+import FireConceptView from './components/FireConceptView';
+import PrecautionChecklistView from './components/PrecautionChecklistView';
+import DontBeADuckView from './components/DontBeADuckView';
+import CibilMasterclassView from './components/CibilMasterclassView';
+import LoanAnatomyView from './components/LoanAnatomyView';
+import EmiPsychologyView from './components/EmiPsychologyView';
+import DebtRepaymentView from './components/DebtRepaymentView';
+import MoneyLaunderingView from './components/MoneyLaunderingView';
+import FinanceRulesView from './components/FinanceRulesView';
+import InvestmentMindsetView from './components/InvestmentMindsetView';
+import DebtMarketsMasteryView from './components/DebtMarketsMasteryView';
+import SipMutualFundsView from './components/SipMutualFundsView';
+import StockMarketEssentialsView from './components/StockMarketEssentialsView';
 import NavItem from './components/NavItem';
 
 export default function App() {
@@ -136,6 +164,34 @@ export default function App() {
             {activeTab === 'learning' && <LearningView key="learning" onModuleSelect={navigateToModule} />}
             {activeTab === 'simulations' && <SimulationView key="simulations" />}
             {activeTab === 'module-detail' && currentModule === 'budgeting-50-30-20' && <Budgeting503020View key="budgeting-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'inflation' && <InflationView key="inflation-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'behavioural-finance' && <BehaviouralFinanceView key="behavioural-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'account-types' && <AccountTypesView key="account-types-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'bank-business' && <HowBanksMakeMoneyView key="bank-business-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'interest-rates' && <MagicOfInterestView key="interest-rates-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'statement-reading' && <ReadingStatementView key="statement-reading-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'tax-types' && <TaxTypesView key="tax-types-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'income-tax-basics' && <IncomeTaxBasicsView key="income-tax-basics-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'capital-gains' && <CapitalGainsView key="capital-gains-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'life-insurance-term' && <TermVsOthersView key="life-insurance-term-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'health-insurance-101' && <HealthInsuranceView key="health-insurance-101-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'vehicle-protection' && <VehicleProtectionView key="vehicle-protection-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'avoid-agent-scams' && <AvoidAgentScamsView key="avoid-agent-scams-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'fd-retirement' && <FdRetirementView key="fd-retirement-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'pf-nps-deepdive' && <PfNpsDeepDiveView key="pf-nps-deepdive-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'fire-concept' && <FireConceptView key="fire-concept-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'fraud-checklist' && <PrecautionChecklistView key="fraud-checklist-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'duck-prevention' && <DontBeADuckView key="duck-prevention-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'cibil-masterclass' && <CibilMasterclassView key="cibil-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'loan-anatomy' && <LoanAnatomyView key="loan-anatomy-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'emi-psychology' && <EmiPsychologyView key="emi-psychology-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'debt-repayment' && <DebtRepaymentView key="debt-repayment-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'money-laundering' && <MoneyLaunderingView key="money-laundering-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'finance-rules' && <FinanceRulesView key="finance-rules-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'investing-intro' && <InvestmentMindsetView key="investing-intro-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'fd-basics-mastery' && <DebtMarketsMasteryView key="fd-basics-mastery-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'sip-mutual-funds' && <SipMutualFundsView key="sip-mutual-funds-module" onBack={goBack} />}
+            {activeTab === 'module-detail' && currentModule === 'stock-market' && <StockMarketEssentialsView key="stock-market-module" onBack={goBack} />}
             {activeTab !== 'dashboard' && activeTab !== 'learning' && activeTab !== 'simulations' && activeTab !== 'module-detail' && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
